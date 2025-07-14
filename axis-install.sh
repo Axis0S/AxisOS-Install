@@ -34,7 +34,6 @@ $$/   $$/ $$/   $$/ $$/ $$$$$$$/   $$$$$$/   $$$$$$/        $$$$$$/ $$/   $$/ $$
 # Source configuration and utility functions
 source "$SCRIPT_DIR/config.sh"
 source "$SCRIPT_DIR/utils.sh"
-source "$SCRIPT_DIR/network.sh"
 source "$SCRIPT_DIR/partitioning.sh"
 source "$SCRIPT_DIR/installation.sh"
 
@@ -59,6 +58,7 @@ check_arch_iso() {
 
 show_welcome() {
     dialog --title "Axis-install - Arch Linux Installer" \
+           --backtitle "AxisOS Installer" \
            --msgbox "$AXIS_ART\n\nWelcome to Axis-install!\n\nThis installer will guide you through the process of installing Arch Linux on your system.\n\nPress OK to continue." 20 80
 }
 
@@ -74,6 +74,7 @@ check_dependencies() {
     
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         dialog --title "Installing Dependencies" \
+               --backtitle "AxisOS Installer" \
                --infobox "Installing missing dependencies: ${missing_deps[*]}" 6 60
         
         pacman -Sy --noconfirm "${missing_deps[@]}" || {
@@ -87,23 +88,11 @@ check_dependencies() {
     systemctl start gpm.service || true
 }
 
-check_internet() {
-    if ! ping -c 1 google.com &> /dev/null; then
-        dialog --title "No Internet Connection" \
-               --yesno "$AXIS_ART\n\nNo internet connection detected.\nWould you like to configure Wi-Fi?" 15 60
-        
-        if [[ $? -eq 0 ]]; then
-            configure_wifi
-        else
-            dialog --title "Error" --msgbox "Internet connection is required for installation" 6 50
-            exit 1
-        fi
-    fi
-}
 
 main_menu() {
     while true; do
         choice=$(dialog --title "Axis-install Main Menu" \
+                       --backtitle "AxisOS Installer" \
                        --menu "$AXIS_ART\n\nChoose an option:" 25 80 10 \
                        "1" "Set Locale" \
                        "2" "Set Timezone" \
@@ -139,7 +128,6 @@ main() {
     check_arch_iso
     show_welcome
     check_dependencies
-    check_internet
     initialize_config
     main_menu
 }

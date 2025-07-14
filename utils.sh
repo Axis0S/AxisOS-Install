@@ -23,7 +23,9 @@ log() {
 
 # Error handler
 error_exit() {
-    dialog --title "Error" --msgbox "$1" 8 60
+    dialog --title "Error" \
+           --backtitle "AxisOS Installer" \
+           --msgbox "$1" 8 60
     log "ERROR: $1"
     exit 1
 }
@@ -39,13 +41,16 @@ set_locale() {
     
     local selected
     selected=$(dialog --title "Select Locale" \
+                     --backtitle "AxisOS Installer" \
                      --menu "$AXIS_ART\n\nChoose your system locale:" 25 80 15 \
                      "${locales[@]}" \
                      2>&1 >/dev/tty)
     
     if [[ -n "$selected" ]]; then
         save_config "LOCALE" "$selected"
-        dialog --title "Locale Set" --msgbox "Locale set to: $selected" 6 50
+        dialog --title "Locale Set" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Locale set to: $selected" 6 50
     fi
 }
 
@@ -62,6 +67,7 @@ set_timezone() {
     
     local region
     region=$(dialog --title "Select Region" \
+                   --backtitle "AxisOS Installer" \
                    --menu "$AXIS_ART\n\nChoose your region:" 25 60 15 \
                    "${regions[@]}" \
                    2>&1 >/dev/tty)
@@ -80,13 +86,16 @@ set_timezone() {
     
     local city
     city=$(dialog --title "Select City" \
+                 --backtitle "AxisOS Installer" \
                  --menu "$AXIS_ART\n\nChoose your city:" 25 60 15 \
                  "${cities[@]}" \
                  2>&1 >/dev/tty)
     
     if [[ -n "$city" ]]; then
         save_config "TIMEZONE" "$region/$city"
-        dialog --title "Timezone Set" --msgbox "Timezone set to: $region/$city" 6 50
+        dialog --title "Timezone Set" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Timezone set to: $region/$city" 6 50
     fi
 }
 
@@ -94,13 +103,16 @@ set_timezone() {
 set_hostname() {
     local hostname
     hostname=$(dialog --title "Set Hostname" \
+                     --backtitle "AxisOS Installer" \
                      --inputbox "$AXIS_ART\n\nEnter the hostname for this system:" 15 60 \
                      "${CONFIG[HOSTNAME]}" \
                      2>&1 >/dev/tty)
     
     if [[ -n "$hostname" ]]; then
         save_config "HOSTNAME" "$hostname"
-        dialog --title "Hostname Set" --msgbox "Hostname set to: $hostname" 6 50
+        dialog --title "Hostname Set" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Hostname set to: $hostname" 6 50
     fi
 }
 
@@ -110,21 +122,27 @@ set_root_password() {
     
     while true; do
         password=$(dialog --title "Set Root Password" \
+                         --backtitle "AxisOS Installer" \
                          --passwordbox "$AXIS_ART\n\nEnter root password:" 15 60 \
                          2>&1 >/dev/tty)
         
         [[ -z "$password" ]] && return
         
         password_confirm=$(dialog --title "Confirm Root Password" \
+                                 --backtitle "AxisOS Installer" \
                                  --passwordbox "$AXIS_ART\n\nConfirm root password:" 15 60 \
                                  2>&1 >/dev/tty)
         
         if [[ "$password" == "$password_confirm" ]]; then
             save_config "ROOT_PASSWORD" "$password"
-            dialog --title "Success" --msgbox "Root password set successfully" 6 40
+            dialog --title "Success" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Root password set successfully" 6 40
             break
         else
-            dialog --title "Error" --msgbox "Passwords do not match. Please try again." 6 50
+            dialog --title "Error" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Passwords do not match. Please try again." 6 50
         fi
     done
 }
@@ -134,6 +152,7 @@ create_user_account() {
     # Get full name
     local fullname
     fullname=$(dialog --title "User Full Name" \
+                     --backtitle "AxisOS Installer" \
                      --inputbox "$AXIS_ART\n\nEnter user's full name:" 15 60 \
                      "${CONFIG[USER_FULLNAME]}" \
                      2>&1 >/dev/tty)
@@ -144,6 +163,7 @@ create_user_account() {
     # Get username
     local username
     username=$(dialog --title "Username" \
+                     --backtitle "AxisOS Installer" \
                      --inputbox "$AXIS_ART\n\nEnter username (lowercase, no spaces):" 15 60 \
                      "${CONFIG[USERNAME]}" \
                      2>&1 >/dev/tty)
@@ -152,7 +172,9 @@ create_user_account() {
     
     # Validate username
     if ! [[ "$username" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
-        dialog --title "Error" --msgbox "Invalid username. Use only lowercase letters, numbers, underscore and dash." 8 60
+        dialog --title "Error" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Invalid username. Use only lowercase letters, numbers, underscore and dash." 8 60
         return
     fi
     
@@ -162,21 +184,27 @@ create_user_account() {
     local password password_confirm
     while true; do
         password=$(dialog --title "Set User Password" \
+                         --backtitle "AxisOS Installer" \
                          --passwordbox "$AXIS_ART\n\nEnter password for $username:" 15 60 \
                          2>&1 >/dev/tty)
         
         [[ -z "$password" ]] && return
         
         password_confirm=$(dialog --title "Confirm User Password" \
+                                 --backtitle "AxisOS Installer" \
                                  --passwordbox "$AXIS_ART\n\nConfirm password for $username:" 15 60 \
                                  2>&1 >/dev/tty)
         
         if [[ "$password" == "$password_confirm" ]]; then
             save_config "USER_PASSWORD" "$password"
-            dialog --title "Success" --msgbox "User account details saved successfully" 6 50
+            dialog --title "Success" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "User account details saved successfully" 6 50
             break
         else
-            dialog --title "Error" --msgbox "Passwords do not match. Please try again." 6 50
+            dialog --title "Error" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Passwords do not match. Please try again." 6 50
         fi
     done
 }
@@ -185,6 +213,7 @@ create_user_account() {
 select_desktop_environment() {
     local choice
     choice=$(dialog --title "Installation Type" \
+                   --backtitle "AxisOS Installer" \
                    --menu "$AXIS_ART\n\nSelect installation type:" 20 70 10 \
                    "1" "Desktop Environment" \
                    "2" "Tiling Window Manager" \
@@ -204,7 +233,9 @@ select_desktop_environment() {
             save_config "DESKTOP_TYPE" "none"
             save_config "DESKTOP_ENV" ""
             save_config "TILING_WM" ""
-            dialog --title "Base System" --msgbox "Base system only will be installed" 6 50
+            dialog --title "Base System" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Base system only will be installed" 6 50
             ;;
     esac
 }
@@ -222,6 +253,7 @@ select_desktop_env() {
     
     local selected
     selected=$(dialog --title "Select Desktop Environment" \
+                     --backtitle "AxisOS Installer" \
                      --menu "$AXIS_ART\n\nChoose a desktop environment:" 22 70 10 \
                      "${envs[@]}" \
                      2>&1 >/dev/tty)
@@ -229,7 +261,9 @@ select_desktop_env() {
     if [[ -n "$selected" ]]; then
         save_config "DESKTOP_ENV" "$selected"
         save_config "TILING_WM" ""
-        dialog --title "Desktop Selected" --msgbox "$selected desktop environment selected" 6 50
+        dialog --title "Desktop Selected" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "$selected desktop environment selected" 6 50
     fi
 }
 
@@ -243,6 +277,7 @@ select_tiling_wm() {
     
     local selected
     selected=$(dialog --title "Select Window Manager" \
+                     --backtitle "AxisOS Installer" \
                      --menu "$AXIS_ART\n\nChoose a tiling window manager:" 20 70 10 \
                      "${wms[@]}" \
                      2>&1 >/dev/tty)
@@ -250,7 +285,9 @@ select_tiling_wm() {
     if [[ -n "$selected" ]]; then
         save_config "TILING_WM" "$selected"
         save_config "DESKTOP_ENV" ""
-        dialog --title "WM Selected" --msgbox "$selected window manager selected" 6 50
+        dialog --title "WM Selected" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "$selected window manager selected" 6 50
     fi
 }
 
@@ -264,6 +301,7 @@ select_login_manager() {
     
     local selected
     selected=$(dialog --title "Select Login Manager" \
+                     --backtitle "AxisOS Installer" \
                      --menu "$AXIS_ART\n\nChoose a login manager:" 20 70 10 \
                      "${managers[@]}" \
                      2>&1 >/dev/tty)
@@ -274,7 +312,9 @@ select_login_manager() {
         else
             save_config "LOGIN_MANAGER" "$selected"
         fi
-        dialog --title "Login Manager" --msgbox "Login manager set to: $selected" 6 50
+        dialog --title "Login Manager" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Login manager set to: $selected" 6 50
     fi
 }
 
@@ -288,6 +328,7 @@ confirm_installation() {
     summary=$(get_config_summary)
     
     dialog --title "Confirm Installation" \
+           --backtitle "AxisOS Installer" \
            --yesno "$AXIS_ART\n\n$summary\n\nDo you want to proceed with the installation?\n\nWARNING: This will erase all data on the selected disk!" 25 80
     
     if [[ $? -eq 0 ]]; then

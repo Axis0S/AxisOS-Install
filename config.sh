@@ -109,7 +109,9 @@ validate_config() {
         for error in "${errors[@]}"; do
             error_msg+="\n- $error"
         done
-        dialog --title "Configuration Error" --msgbox "$error_msg" 12 60
+        dialog --title "Configuration Error" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "$error_msg" 12 60
         return 1
     fi
     

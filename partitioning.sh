@@ -29,13 +29,16 @@ select_disk() {
     done
     
     disk=$(dialog --title "Select Disk" \
+                 --backtitle "AxisOS Installer" \
                  --menu "$AXIS_ART\n\nChoose disk to install Arch Linux:" 20 70 10 \
                  "${disks[@]}" \
                  2>&1 >/dev/tty)
     
     if [[ -n "$disk" ]]; then
         save_config "DISK" "$disk"
-        dialog --title "Disk Selected" --msgbox "Disk $disk selected for installation" 6 50
+        dialog --title "Disk Selected" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Disk $disk selected for installation" 6 50
     fi
 }
 
@@ -44,7 +47,9 @@ partition_disk() {
     load_config
     
     if [[ -z "${CONFIG[DISK]}" ]]; then
-        dialog --title "Error" --msgbox "No disk selected. Please select a disk first." 6 50
+        dialog --title "Error" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "No disk selected. Please select a disk first." 6 50
         return
     fi
     
@@ -59,7 +64,9 @@ partition_disk() {
             partition_encrypted "${CONFIG[DISK]}"
             ;;
         *)
-            dialog --title "Error" --msgbox "Invalid partition type. Please choose primary or encrypted." 6 50
+            dialog --title "Error" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Invalid partition type. Please choose primary or encrypted." 6 50
             return
             ;;
     esac
@@ -70,7 +77,9 @@ partition_standard() {
     local disk="$1"
     local fs_type="${CONFIG[FILESYSTEM]}"
     
-    dialog --title "Partitioning Disk" --msgbox "$AXIS_ART\n\nPartitioning disk $disk for standard installation" 8 50
+    dialog --title "Partitioning Disk" \
+           --backtitle "AxisOS Installer" \
+           --msgbox "$AXIS_ART\n\nPartitioning disk $disk for standard installation" 8 50
     
     # Create partitions
     parted -s "$disk" -- mklabel gpt
@@ -118,7 +127,9 @@ partition_encrypted() {
     local crypt_name="cryptroot"
     local fs_type="${CONFIG[FILESYSTEM]}"
     
-    dialog --title "Partitioning Disk" --msgbox "$AXIS_ART\n\nPartitioning disk $disk for encrypted installation" 8 50
+    dialog --title "Partitioning Disk" \
+           --backtitle "AxisOS Installer" \
+           --msgbox "$AXIS_ART\n\nPartitioning disk $disk for encrypted installation" 8 50
     
     # Create partitions
     parted -s "$disk" -- mklabel gpt
@@ -160,6 +171,7 @@ partition_encrypted() {
 select_partition_type() {
     local choice
     choice=$(dialog --title "Partition Type" \
+                   --backtitle "AxisOS Installer" \
                    --menu "$AXIS_ART\n\nSelect partition type:" 15 60 5 \
                    "primary" "Standard partition" \
                    "encrypted" "Encrypted partition (LUKS)" \
@@ -180,21 +192,27 @@ set_encryption_password() {
     
     while true; do
         password=$(dialog --title "Encryption Password" \
+                         --backtitle "AxisOS Installer" \
                          --passwordbox "$AXIS_ART\n\nEnter encryption password:" 15 60 \
                          2>&1 >/dev/tty)
         
         [[ -z "$password" ]] && return
         
         password_confirm=$(dialog --title "Confirm Encryption Password" \
+                                 --backtitle "AxisOS Installer" \
                                  --passwordbox "$AXIS_ART\n\nConfirm encryption password:" 15 60 \
                                  2>&1 >/dev/tty)
         
         if [[ "$password" == "$password_confirm" ]]; then
             save_config "ENCRYPTION_PASSWORD" "$password"
-            dialog --title "Success" --msgbox "Encryption password set successfully" 6 50
+            dialog --title "Success" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Encryption password set successfully" 6 50
             break
         else
-            dialog --title "Error" --msgbox "Passwords do not match. Please try again." 6 50
+            dialog --title "Error" \
+                   --backtitle "AxisOS Installer" \
+                   --msgbox "Passwords do not match. Please try again." 6 50
         fi
     done
 }
@@ -203,6 +221,7 @@ set_encryption_password() {
 select_filesystem() {
     local choice
     choice=$(dialog --title "Filesystem Type" \
+                   --backtitle "AxisOS Installer" \
                    --menu "$AXIS_ART\n\nSelect root filesystem type:" 15 60 5 \
                    "ext4" "Extended 4 filesystem" \
                    "btrfs" "B-tree filesystem" \
@@ -210,7 +229,9 @@ select_filesystem() {
     
     if [[ -n "$choice" ]]; then
         save_config "FILESYSTEM" "$choice"
-        dialog --title "Filesystem Selected" --msgbox "Filesystem set to: $choice" 6 50
+        dialog --title "Filesystem Selected" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Filesystem set to: $choice" 6 50
     fi
 }
 
@@ -218,13 +239,16 @@ select_filesystem() {
 config_swap() {
     local swap_size
     swap_size=$(dialog --title "Swap Configuration" \
+                      --backtitle "AxisOS Installer" \
                       --inputbox "$AXIS_ART\n\nEnter swap size in GB (0 for no swap):" 15 60 \
                       "${CONFIG[SWAP_SIZE]}" \
                       2>&1 >/dev/tty)
     
     if [[ -n "$swap_size" ]] && [[ "$swap_size" =~ ^[0-9]+$ ]]; then
         save_config "SWAP_SIZE" "$swap_size"
-        dialog --title "Swap Configured" --msgbox "Swap size set to: ${swap_size}GB" 6 50
+        dialog --title "Swap Configured" \
+               --backtitle "AxisOS Installer" \
+               --msgbox "Swap size set to: ${swap_size}GB" 6 50
     fi
 }
 
@@ -232,6 +256,7 @@ config_swap() {
 disk_menu() {
     while true; do
         choice=$(dialog --title "Disk Management" \
+                       --backtitle "AxisOS Installer" \
                        --menu "$AXIS_ART\n\nDisk Management Options:" 20 60 10 \
                        "1" "Select Disk" \
                        "2" "Select Partition Type" \
@@ -248,7 +273,9 @@ disk_menu() {
             4) config_swap ;;
             5) partition_disk ;;
             0) break ;;
-            *) dialog --title "Error" --msgbox "Invalid option" 6 30 ;;
+            *) dialog --title "Error" \
+                      --backtitle "AxisOS Installer" \
+                      --msgbox "Invalid option" 6 30 ;;
         esac
     done
 }

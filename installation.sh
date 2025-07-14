@@ -6,6 +6,7 @@ perform_installation() {
     load_config
 
     dialog --title "Starting Installation" \
+           --backtitle "AxisOS Installer" \
            --infobox "$AXIS_ART\n\nStarting the installation process. Please wait..." 10 60
     
     # Show progress
@@ -80,13 +81,16 @@ perform_installation() {
         echo "Installation complete!"
         echo "XXX"
         
-    ) | dialog --title "Installing Arch Linux" --gauge "Starting installation..." 10 70 0
+    ) | dialog --title "Installing Arch Linux" \
+               --backtitle "AxisOS Installer" \
+               --gauge "Starting installation..." 10 70 0
     
     # Unmount
     swapoff /mnt/swapfile 2>/dev/null || true
     umount -R /mnt
     
     dialog --title "Installation Complete" \
+           --backtitle "AxisOS Installer" \
            --msgbox "$AXIS_ART\n\nArch Linux has been successfully installed!\n\nYou can now reboot your system." 15 70
 }
 
