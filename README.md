@@ -28,20 +28,57 @@ Axis-install is a console-based Arch Linux installer that leverages the TUI prov
 ## Requirements
 Ensure you have booted from an Arch Linux installation ISO and have internet connectivity to download necessary packages.
 
-## Installation Steps
-1. **Run `axis-install.sh`:** This is the main entry point of the installer.
-2. **Configure Wi-Fi:** Use provided options to connect to the internet.
-3. **Select Locale, Timezone, and Hostname:** Configure basic system settings.
-4. **Disk Partitioning:** Choose a disk, partition type (primary or encrypted), filesystem, and swap configuration.
-5. **User and Root Setup:** Create a root password and user account.
-6. **Select and Install Desktop Environment:** Choose a desktop environment or tiling window manager.
-7. **Log Out after Installation:** Remove the installation media and reboot.
+## Download and Installation
 
-## Usage
-Execute the main installer script as root: 
+### Method 1: Using Git
 ```bash
+# Install git if not already installed
+pacman -Sy git
+
+# Clone the repository
+git clone https://github.com/Axis0S/AxisOS-Install.git
+
+# Navigate to the installer directory
+cd AxisOS-Install
+
+# Make the installer executable
+chmod +x axis-install.sh
+
+# Run the installer
 sudo ./axis-install.sh
 ```
+
+### Method 2: Direct Download
+```bash
+# Download the repository as a zip file
+curl -L https://github.com/Axis0S/AxisOS-Install/archive/refs/heads/main.zip -o axis-installer.zip
+
+# Install unzip if not already installed
+pacman -Sy unzip
+
+# Extract the files
+unzip axis-installer.zip
+
+# Navigate to the installer directory
+cd AxisOS-Install-main
+
+# Make the installer executable
+chmod +x axis-install.sh
+
+# Run the installer
+sudo ./axis-install.sh
+```
+
+## Installation Steps
+1. **Download the installer** using one of the methods above
+2. **Run `axis-install.sh`:** This is the main entry point of the installer
+3. **Configure Wi-Fi:** Use provided options to connect to the internet
+4. **Select Locale, Timezone, and Hostname:** Configure basic system settings
+5. **Disk Partitioning:** Choose a disk, partition type (primary or encrypted), filesystem, and swap configuration
+6. **User and Root Setup:** Create a root password and user account
+7. **Select and Install Desktop Environment:** Choose a desktop environment or tiling window manager
+8. **Install System:** Confirm and proceed with the installation
+9. **Reboot:** Remove the installation media and reboot into your new Arch Linux system
 
 ## Known Issues
 - Ensure that `gpm` is running for mouse support in the console.
