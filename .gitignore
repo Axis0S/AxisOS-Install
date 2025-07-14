@@ -1,0 +1,17 @@
+# Temporary files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Installation artifacts
+/mnt/
